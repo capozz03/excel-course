@@ -23,10 +23,10 @@ export class Table extends ExcelComponent {
     }
 
     onMousemove() {
-        // console.log('mousemove')
+
     }
 
     onMouseup() {
-        // console.log('mouseup')
+
     }
 }
