@@ -1,8 +1,8 @@
 class Dom {
     constructor(selector) {
-        this.$el = typeof selector === 'string'
-            ? document.querySelector(selector)
-            : selector
+        this.$el = typeof selector === 'string' ?
+            document.querySelector(selector) :
+            selector
     }
 
     html(html) {
@@ -11,6 +11,17 @@ class Dom {
             return this
         }
         return this.$el.outerHTML.trim()
+    }
+
+    text(text) {
+        if (typeof text === 'string') {
+            this.$el.textContent = text
+            return this
+        }
+        if (this.$el.tagName.toLowerCase() === 'input') {
+            return this.$el.value.trim()
+        }
+        return this.$el.textContent.trim()
     }
 
     clear() {
@@ -24,6 +35,10 @@ class Dom {
 
     off(eventType, callback) {
         this.$el.removeEventListener(eventType, callback)
+    }
+
+    find(selector) {
+        return $(this.$el.querySelector(selector))
     }
 
     append(node) {
@@ -64,22 +79,41 @@ class Dom {
             })
     }
 
-    cssClear(props) {
-        props.forEach((prop) => {
-            this.$el.style.removeProperty(prop)
-        })
+    id(parse) {
+        if (parse) {
+            const parsed = this.id().split(':')
+            return {
+                row: +parsed[0], // привести к int
+                col: +parsed[1], // привести к int
+            }
+        }
+        return this.data.id
     }
-  }
 
-  // event.target
-  export function $(selector) {
+    focus() {
+        this.$el.focus();
+        return this
+    }
+
+    addClass(className) {
+        this.$el.classList.add(className)
+        return this
+    }
+
+    removeClass(className) {
+        this.$el.classList.remove(className)
+        return this
+    }
+}
+
+export function $(selector) {
     return new Dom(selector)
-  }
+}
 
-  $.create = (tagName, classes = '') => {
+$.create = (tagName, classes = '') => {
     const el = document.createElement(tagName)
     if (classes) {
         el.classList.add(classes)
     }
     return $(el)
-  }
+}
